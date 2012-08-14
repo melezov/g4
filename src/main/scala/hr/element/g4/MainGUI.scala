@@ -1,13 +1,17 @@
 package hr.element.g4
 
-import swing._
+import java.awt.Toolkit
+
+import scala.actors.Actor.actor
+import scala.swing.Component
+import scala.swing.Graphics2D
+import scala.swing.MainFrame
+import scala.swing.SimpleSwingApplication
+import scala.swing.event.UIElementResized
+
+import hr.element.etb.img.geom.Dim
 import javax.swing.JDialog
 import javax.swing.JFrame
-import java.awt.Toolkit
-import javax.swing.JComponent
-import java.awt.Graphics
-import java.awt.Color
-import scala.concurrent.ops.spawn
 
 object MainGUI extends SimpleSwingApplication {
   private def setLookAndFeel(dlf: Boolean) {
@@ -19,19 +23,30 @@ object MainGUI extends SimpleSwingApplication {
   }
 
   var running = true
-  var vista = new Vista(600, 300)
 
   override def startup(args: Array[String]) {
     setLookAndFeel(true)
     top.visible = true
 
-    spawn {
-      println("ICH STARTE")
+    actor {
       while (running) {
-        vista.doTick()
-        Thread.sleep(10)
+        Vista ! Tick
+        Thread.sleep(50)
       }
-      println("ICH DIE")
+    }
+  }
+
+  var vista = new Component {
+    listenTo(this)
+
+    reactions += {
+      case UIElementResized(x) =>
+        Vista ! Dim(x.size.width, x.size.height)
+    }
+
+    override def paint(g: Graphics2D) {
+      super.paint(g)
+      Vista !? g
     }
   }
 

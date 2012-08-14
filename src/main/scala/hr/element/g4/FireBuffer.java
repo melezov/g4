@@ -34,7 +34,7 @@ public class FireBuffer {
 
       final int height = avg
         - rnd.nextInt(12)
-        - (rnd.nextInt(100) == 0 ? 1000 : 0);
+        - (rnd.nextInt(50) == 0 ? 50 : 0);
 
       final int burn = Math.max(height, 0);
       body[index - w] = burn;

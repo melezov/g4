@@ -18,7 +18,8 @@ unmanagedSourceDirectories in Compile <<= (scalaSource in Compile)(_ :: Nil)
 unmanagedSourceDirectories in Test := Nil
 
 libraryDependencies <<= scalaVersion(sV => Seq(
-  "org.scala-lang" % "scala-swing" % sV
+  "org.scala-lang" % "scala-actors" % sV
+, "org.scala-lang" % "scala-swing" % sV
 ))
 
 resolvers := Seq("Element Nexus" at "http://maven.element.hr/nexus/content/groups/public")
